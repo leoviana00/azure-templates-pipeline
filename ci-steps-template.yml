@@ -18,31 +18,51 @@ steps:
   failOnStderr: true
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   displayName: 'docker push'
+
 - task: HelmInstaller@1
-  displayName: 'install helm'
+  displayName: "install helm"
   inputs:
     helmVersionToInstall: $(helmVersion)
 - bash: |
-    cd $(projectName)
-    helm package \
-        --version $(helmChartVersion) \
-        --app-version $(imageTag) \
-        charts/$(projectName)
-  failOnStderr: true
-  displayName: 'helm package'
-- bash: |
-    cd $(projectName)
-    chartPackage=$(ls $(projectName)-$(helmChartVersion).tgz)
-    az acr helm push \
-        -n $(registryName) \
-        -u $(registryLogin) \
-        -p '$(registryPassword)' \
-        $chartPackage
+    echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
+    cd deploy/k8s/helm/
+    helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(projectName) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
-  failOnStderr: false
-  name: helmPush
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-  displayName: 'az acr helm push'
+  failOnStderr: true
+  displayName: "helm package"
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(helmfrom)
+    targetFolder: $(helmto)
 - publish: $(build.artifactStagingDirectory)
   artifact: build-artifact
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+
+# - task: HelmInstaller@1
+#   displayName: 'install helm'
+#   inputs:
+#     helmVersionToInstall: $(helmVersion)
+# - bash: |
+#     cd $(projectName)
+#     helm package \
+#         --version $(helmChartVersion) \
+#         --app-version $(imageTag) \
+#         charts/$(projectName)
+#   failOnStderr: true
+#   displayName: 'helm package'
+# - bash: |
+#     cd $(projectName)
+#     chartPackage=$(ls $(projectName)-$(helmChartVersion).tgz)
+#     az acr helm push \
+#         -n $(registryName) \
+#         -u $(registryLogin) \
+#         -p '$(registryPassword)' \
+#         $chartPackage
+#     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
+#   failOnStderr: true
+#   name: helmPush
+#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+#   displayName: 'az acr helm push'
+# - publish: $(build.artifactStagingDirectory)
+#   artifact: build-artifact
+#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
