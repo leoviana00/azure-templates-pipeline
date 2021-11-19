@@ -1,5 +1,6 @@
 parameters:
   projectName: ''
+  dockerRegistryServiceConnectionName: ''
 
 variables:
   helmVersion: 3.2.3
