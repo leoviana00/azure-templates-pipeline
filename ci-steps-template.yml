@@ -33,7 +33,7 @@ steps:
 - bash: |
     cd $(projectName)
     chartPackage=$(ls $(projectName)-$(helmChartVersion).tgz)
-    az acr \
+    az acr helm push \
         -n $(registryName) \
         -u $(registryLogin) \
         -p $(registryPassword) \
