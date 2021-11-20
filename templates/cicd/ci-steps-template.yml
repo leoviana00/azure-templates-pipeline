@@ -1,13 +1,40 @@
 steps:
-# Cria e envia a imagem do docker
+# # Cria e envia a imagem do docker
+# - task: Docker@2
+#   displayName: Build and push an image to container registry
+#   inputs:
+#     command: buildAndPush
+#     repository: $(imageName)
+#     dockerfile: $(dockerfile)
+#     containerRegistry: $(dockerRegistryServiceConnectionName)
+#     buildContext: $(buildContext)
+#     tags: |
+#       $(imageTag)
+
+# Docker login
 - task: Docker@2
-  displayName: Build and push an image to container registry
+  displayName: dockerLogin
   inputs:
-    command: buildAndPush
-    repository: $(imageName)
-    dockerfile: $(dockerfile)
+    command: login
     containerRegistry: $(dockerRegistryServiceConnectionName)
-    buildContext: $(buildContext)
+
+# Docker Build
+- task: Docker@2
+  displayName: dockerBuild
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: $(dockerfile)
+    tags: |
+      $(imageTag)
+
+# Docker Push
+- task: Docker@2
+  displayName: dockerPush
+  inputs:
+    command: push
+    containerRegistry: $(dockerRegistryServiceConnectionName)
+    repository: $(imageName)
     tags: |
       $(imageTag)
 
