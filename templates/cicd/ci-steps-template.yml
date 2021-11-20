@@ -14,7 +14,6 @@ steps:
 # Download template helm
 - task: helm_publish_acr@2
   displayName: helm chart publish
-  steps:
   - checkout: templates
     displayName: download chart
 
