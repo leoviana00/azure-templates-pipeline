@@ -11,11 +11,6 @@ steps:
     tags: |
       $(imageTag)
 
-# # Download template helm
-# - task: checkout@v2
-#   displayName: checkout repo
-#   - checkout: templates
-
 # Listar
 - script: |
     ls $(build.sourcesdirectory)/templates/helm
