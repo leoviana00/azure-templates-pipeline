@@ -1,5 +1,5 @@
 steps:
-- checkout: github.com/leoviana00/azure-templates-pipeline
+- checkout: self
   path: templates/
 
 # Cria e envia a imagem do docker
