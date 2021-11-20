@@ -1,4 +1,14 @@
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: leoviana00/azure-templates-pipeline
+      ref: 'refs/heads/azuredevops/templates'
+      endpoint: 'leoviana00'
+
 steps:
+- checkout: templates
+
 # Cria e envia a imagem do docker
 - task: Docker@2
   displayName: Build and push an image to container registry
@@ -10,6 +20,11 @@ steps:
     buildContext: $(buildContext)
     tags: |
       $(imageTag)
+
+# list contents
+- script: |
+    ls $(build.sourcesdirectory)/helm/charts
+  displayName: list contents
 
 # Instala o cliente Helm
 - task: HelmInstaller@1
