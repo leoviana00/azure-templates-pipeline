@@ -1,13 +1,6 @@
-resources:
-  repositories:
-    - repository: templates
-      type: github
-      name: leoviana00/azure-templates-pipeline
-      ref: 'refs/heads/azuredevops/templates'
-      endpoint: 'leoviana00'
-
 steps:
-- checkout: templates
+- checkout: github.com/leoviana00/azure-templates-pipeline
+  path: templates/
 
 # Cria e envia a imagem do docker
 - task: Docker@2
