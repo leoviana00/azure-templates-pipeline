@@ -11,10 +11,10 @@ steps:
     tags: |
       $(imageTag)
 
-# Download template helm
-- task: checkout@v2
-  displayName: checkout repo
-  - checkout: templates
+# # Download template helm
+# - task: checkout@v2
+#   displayName: checkout repo
+#   - checkout: templates
 
 # Listar
 - script: |
