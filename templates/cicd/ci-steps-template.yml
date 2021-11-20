@@ -11,9 +11,6 @@ steps:
     tags: |
       $(imageTag)
 
-- checkout: self
-  displayName: download chart
-  
 # list contents
 - script: |
     ls $(build.sourcesdirectory)/helm/charts
