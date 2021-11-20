@@ -1,6 +1,6 @@
 steps:
 - checkout: self
-  path: templates/
+  path: templates
 
 # Cria e envia a imagem do docker
 - task: Docker@2
