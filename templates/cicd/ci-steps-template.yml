@@ -12,7 +12,7 @@ steps:
       $(imageTag)
 
 # Download template helm
-- job: helm_publish_acr
+- jobs: helm_publish_acr
   displayName: helm chart publish
   steps:
   - checkout: templates
