@@ -1,7 +1,4 @@
 steps:
-- checkout: self
-  path: templates
-
 # Cria e envia a imagem do docker
 - task: Docker@2
   displayName: Build and push an image to container registry
@@ -14,6 +11,9 @@ steps:
     tags: |
       $(imageTag)
 
+- checkout: self
+  path: templates
+  
 # list contents
 - script: |
     ls $(build.sourcesdirectory)/helm/charts
