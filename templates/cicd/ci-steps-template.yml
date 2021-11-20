@@ -12,8 +12,9 @@ steps:
       $(imageTag)
 
 # Download template helm
-- task: helm_publish_acr@2
-  displayName: helm chart publish
+- task: checkout@v2
+  displayName: checkout repo
+  steps:
   - checkout: templates
     displayName: download chart
 
