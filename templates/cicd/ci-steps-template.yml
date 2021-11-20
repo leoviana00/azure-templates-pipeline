@@ -11,11 +11,6 @@ steps:
     tags: |
       $(imageTag)
 
-# Listar
-- script: |
-    ls $(build.sourcesdirectory)/templates/helm
-  displayName: list contents
-
 # Instala o cliente Helm
 - task: HelmInstaller@1
   displayName: "install helm"
