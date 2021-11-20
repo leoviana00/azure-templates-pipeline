@@ -14,9 +14,7 @@ steps:
 # Download template helm
 - task: checkout@v2
   displayName: checkout repo
-  steps:
-  - checkout: templates
-    displayName: download chart
+  name: templates
 
 # Listar
 - script: |
