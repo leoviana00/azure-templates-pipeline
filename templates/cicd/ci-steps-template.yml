@@ -15,8 +15,8 @@ steps:
 - task: helm_publish_acr
   displayName: helm chart publish
   steps:
-- checkout: templates
-  displayName: download chart
+  - checkout: templates
+    displayName: download chart
 
 # Listar
 - script: |
