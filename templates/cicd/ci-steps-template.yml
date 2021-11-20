@@ -11,11 +11,6 @@ steps:
     tags: |
       $(imageTag)
 
-# list contents
-- script: |
-    ls $(build.sourcesdirectory)/templates/helm/charts
-  displayName: list contents
-
 # Instala o cliente Helm
 - task: HelmInstaller@1
   displayName: "install helm"
@@ -29,7 +24,7 @@ steps:
 
 # Cria e envia o gráfico do Helm para o ACR.
 - script: |
-    helm chart save $(build.sourcesdirectory)/helm/charts/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+    helm chart save $(build.sourcesdirectory)/deploy/k8s/helm/$(projectName)/charts/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
   failOnStderr: true
   displayName: "save the chart and set the alias"
 
