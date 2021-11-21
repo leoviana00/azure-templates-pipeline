@@ -51,13 +51,13 @@ steps:
 
 # Cria e envia o gráfico do Helm para o ACR.
 - script: |
-    helm chart save $(build.sourcesdirectory)/$(projectName)/charts/ $(registryName).azurecr.io/charts/$(projectName)
+    helm chart save $(build.sourcesdirectory)/$(projectName)/charts/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
   failOnStderr: true
   displayName: "save the chart and set the alias"
 
 # Cria variables.json que contém a versão do gráfico do Helm recém-criada. Que usaremos para obter a versão correta do gráfico durante o CD.
 - script: |
-    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
+    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
   failOnStderr: true
   displayName: "push the chart to acr"
