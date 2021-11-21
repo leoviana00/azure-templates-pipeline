@@ -51,7 +51,7 @@ steps:
 
 # Cria e envia o gráfico do Helm para o ACR.
 - script: |
-    helm chart save $(build.sourcesdirectory)/$(projectName)/charts/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+    helm chart save $(build.sourcesdirectory)/$(projectName)/charts/ $(registryName).azurecr.io/charts/$(projectName)
   failOnStderr: true
   displayName: "save the chart and set the alias"
 
