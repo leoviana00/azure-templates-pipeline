@@ -31,6 +31,7 @@ steps:
   displayName: "install helm"
   inputs:
     helmVersionToInstall: $(helmVersion)
+    
 # Autenticar no ACR
 - script: |
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
