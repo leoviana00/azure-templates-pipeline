@@ -45,7 +45,7 @@ steps:
 
 # Cria variables.json que contém a versão do gráfico do Helm recém-criada. Que usaremos para obter a versão correta do gráfico durante o CD.
 - script: |
-    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
+    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
   failOnStderr: true
   displayName: "push the chart to acr"
