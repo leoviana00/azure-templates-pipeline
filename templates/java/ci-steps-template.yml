@@ -11,6 +11,13 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
+# BuildMaven
+steps:
+- script: |
+    echo Starting the build
+    mvn package
+  displayName: 'Build with Maven'
+
 # Docker login
 - task: Docker@2
   displayName: dockerLogin
