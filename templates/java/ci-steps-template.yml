@@ -12,7 +12,6 @@ steps:
     goals: 'package'
 
 # BuildMaven
-steps:
 - script: |
     echo Starting the build
     mvn package
