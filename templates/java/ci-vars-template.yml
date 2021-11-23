@@ -3,6 +3,7 @@ parameters:
   dockerRegistryServiceConnectionName: ""
   dockerfile: ""
   buildContext: ""
+  chartPath: ""
 
 variables:
   helmVersion: 3.2.3
@@ -17,3 +18,4 @@ variables:
   helmChartVersion: $(build.buildId)
   helmfrom: $(Build.SourcesDirectory)
   helmto: $(Build.ArtifactStagingDirectory)
+  chartPath: ${{ parameters.chartPath }}
