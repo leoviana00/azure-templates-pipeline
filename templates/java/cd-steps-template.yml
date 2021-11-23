@@ -9,6 +9,9 @@ steps:
 - script: |
     echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
   displayName: login to acr using helm
+- script: |
+    helm chart pull $(registryServerName)/charts/$(projectName):$(imageTag)
+  displayName: get helm chart on agent
 # - bash: |
 #    az login \
 #         --service-principal \
