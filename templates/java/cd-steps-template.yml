@@ -15,12 +15,10 @@ steps:
     az aks get-credentials \
         -n $(aks) \
         -g $(rg)
-    helm repo add \
-        $(registryName) \
-        https://$(registryServerName)/helm/v1/repo \
-        --username $(registryLogin) \
-        --password '$(registryPassword)'
+    echo $(registryPassword) | helm registry login $(registryName) --username $(registryLogin) --password-stdin
     helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/ci-pipeline/build-artifact/variables.json -r)
+    helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
+    helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
     helm upgrade \
         --namespace $(k8sNamespace) \
         --create-namespace \
