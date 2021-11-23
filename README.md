@@ -1,3 +1,3 @@
 # azure-templates-pipeline
 
-Estrutura de templates
+- Repositório utilizado para armazenar templates pipeline ci-cd azure devops
