@@ -13,12 +13,14 @@ steps:
 
 # Build com Maven
 - script: |
+    cd $(projectName)
     echo Starting the build
     mvn clean package -DskipTests=true
   displayName: 'Build with Maven'
 
 # Test com Maven
 - script: |
+    cd $(projectName)
     echo Starting the build
     mvn test
   displayName: 'Test with Maven'
