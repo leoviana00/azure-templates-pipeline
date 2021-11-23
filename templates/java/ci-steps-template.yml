@@ -14,13 +14,13 @@ steps:
 # Build com Maven
 - script: |
     echo Starting the build
-    mvn clean package -DskipTests=true
+    $(projectName)/mvn clean package -DskipTests=true
   displayName: 'Build with Maven'
 
 # Test com Maven
 - script: |
     echo Starting the build
-    mvn test
+    $(projectName)/mvn test
   displayName: 'Test with Maven'
 
 # Docker login
@@ -63,7 +63,7 @@ steps:
 
 # Cria e envia o gráfico do Helm para o ACR.
 - script: |
-    helm chart save $(build.sourcesdirectory)/azure-java-templates-helm-chart/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+    helm chart save $(build.sourcesdirectory)/azure-template-helm-chart/azure-java-templates-helm-chart/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
   failOnStderr: true
   displayName: "save the chart and set the alias"
 
