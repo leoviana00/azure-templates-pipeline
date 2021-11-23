@@ -1,0 +1,60 @@
+steps:
+# Docker login
+- task: Docker@2
+  displayName: dockerLogin
+  inputs:
+    command: login
+    containerRegistry: $(dockerRegistryServiceConnectionName)
+
+# Docker Build
+- task: Docker@2
+  displayName: dockerBuild
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: $(dockerfile)
+    tags: |
+      $(imageTag)
+
+# Docker Push
+- task: Docker@2
+  displayName: dockerPush
+  inputs:
+    command: push
+    containerRegistry: $(dockerRegistryServiceConnectionName)
+    repository: $(imageName)
+    tags: |
+      $(imageTag)
+
+# Instala o cliente Helm
+- task: HelmInstaller@1
+  displayName: "install helm"
+  inputs:
+    helmVersionToInstall: $(helmVersion)
+    
+# Autenticar no ACR
+- script: |
+    echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
+  failOnStderr: true
+  displayName: "login to acr using helm" 
+
+# Cria e envia o gráfico do Helm para o ACR.
+- script: |
+    helm chart save $(build.sourcesdirectory)/charts/$(projectName)/ $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+  failOnStderr: true
+  displayName: "save the chart and set the alias"
+
+# Cria variables.json que contém a versão do gráfico do Helm recém-criada. Que usaremos para obter a versão correta do gráfico durante o CD.
+- script: |
+    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(imageTag)
+    echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
+  failOnStderr: true
+  displayName: "push the chart to acr"
+
+# Copie alguns arquivos adicionais para o artefato. Que podemos usar para substituir os valores do gráfico do Helm.
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(helmfrom)
+    targetFolder: $(helmto)
+- publish: $(build.artifactStagingDirectory)
+  artifact: build-artifact
