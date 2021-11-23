@@ -6,29 +6,32 @@ steps:
     helmVersionToInstall: $(helmVersion)
 - download: ci-pipeline
   artifact: build-artifact
-- bash: |
-   az login \
-        --service-principal \
-        -u $(aksSpId) \
-        -p '$(aksSpSecret)' \
-        --tenant $(aksSpTenantId)
-    az aks get-credentials \
-        -n $(aks) \
-        -g $(rg)
-    echo $(registryPassword) | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
-       helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/ci-pipeline/build-artifact/variables.json -r)
-       helm chart pull $(registryServerName)/charts/$(projectName):$imageTag
-       helm chart export $(registryServerName)/charts/$(projectName):$imageTag --destination $(pipeline.workspace)/install
-       helm upgrade \
-    helm upgrade \
-        --namespace $(k8sNamespace) \
-        --create-namespace \
-        --install \
-        --wait \
-        --version $helmChartVersion \
-        --set image.repository=$(registryServerName)/$(projectName) \
-        --set ingress.enabled=false \
-        $(projectName) \
-        $(registryName)/$(projectName)
-  failOnStderr: true
-  displayName: 'deploy helm chart'
+- script: |
+    echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
+  displayName: login to acr using helm
+# - bash: |
+#    az login \
+#         --service-principal \
+#         -u $(aksSpId) \
+#         -p '$(aksSpSecret)' \
+#         --tenant $(aksSpTenantId)
+#     az aks get-credentials \
+#         -n $(aks) \
+#         -g $(rg)
+#     echo $(registryPassword) | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
+#        helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/ci-pipeline/build-artifact/variables.json -r)
+#        helm chart pull $(registryServerName)/charts/$(projectName):$imageTag
+#        helm chart export $(registryServerName)/charts/$(projectName):$imageTag --destination $(pipeline.workspace)/install
+#        helm upgrade \
+#     helm upgrade \
+#         --namespace $(k8sNamespace) \
+#         --create-namespace \
+#         --install \
+#         --wait \
+#         --version $helmChartVersion \
+#         --set image.repository=$(registryServerName)/$(projectName) \
+#         --set ingress.enabled=false \
+#         $(projectName) \
+#         $(registryName)/$(projectName)
+#   failOnStderr: true
+#   displayName: 'deploy helm chart'
