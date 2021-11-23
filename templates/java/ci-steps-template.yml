@@ -14,13 +14,13 @@ steps:
 # Build com Maven
 - script: |
     echo Starting the build
-    $(projectName)/mvn clean package -DskipTests=true
+    mvn clean package -DskipTests=true
   displayName: 'Build with Maven'
 
 # Test com Maven
 - script: |
     echo Starting the build
-    $(projectName)/mvn test
+    mvn test
   displayName: 'Test with Maven'
 
 # Docker login
