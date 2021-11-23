@@ -12,6 +12,11 @@ steps:
 - script: |
     helm chart pull $(registryServerName)/charts/$(projectName):latest
   displayName: get helm chart on agent
+- script: |
+    helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(build.stagingdirectory)
+  displayName: export the chart to folder
+
+
 # - bash: |
 #    az login \
 #         --service-principal \
