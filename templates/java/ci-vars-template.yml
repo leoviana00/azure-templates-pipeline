@@ -15,7 +15,7 @@ variables:
   projectName: ${{ parameters.projectName }}
   imageName: ${{ parameters.projectName }}
   imageTag: $(Build.BuildNumber)
-  helmChartVersion: $(build.buildId)
+  helmChartVersion: $(Build.BuildNumber)
   helmfrom: $(Build.SourcesDirectory)
   helmto: $(Build.ArtifactStagingDirectory)
   chartHelmFile: ${{ parameters.chartHelmFile }}
