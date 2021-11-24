@@ -1,20 +1,49 @@
 steps:
-- checkout: none
+# Instalação do Helm 
 - task: HelmInstaller@1
   displayName: 'install helm'
   inputs:
     helmVersionToInstall: $(helmVersion)
-- download: ci-pipeline
-  artifact: build-artifact
+
+# Login no registry
 - script: |
     echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
   displayName: login to acr using helm
+
+# Puxar a versão mais recente do gráfico do ACR para o agente
 - script: |
     helm chart pull $(registryServerName)/charts/$(projectName):latest
   displayName: get helm chart on agent
+
+# Extrair o gráfico em uma pasta
 - script: |
     helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(build.stagingdirectory)
   displayName: export the chart to folder
+
+- script: |
+    az login \
+        --service-principal \
+        -u $(aksSpId) \
+        -p '$(aksSpSecret)' \
+        --tenant $(aksSpTenantId)
+    az aks get-credentials \
+        -n $(aks) \
+        -g $(rg)
+
+# Implantar o gráfico para AKS
+- task: HelmDeploy@0
+  displayName: deploy chart to aks
+  inputs:
+    # connectionType: 'Azure Resource Manager'
+    # azureSubscription: '$(azure.service.connection)'
+    # azureResourceGroup: 'demos'
+    # kubernetesCluster: 'aksdemoutkarsh'
+    # namespace: 'helmdemo'
+    command: 'upgrade'
+    chartType: 'FilePath'
+    chartPath: '$(build.stagingdirectory)'
+    releaseName: 'helmdemo'
+    arguments: '--create-namespace --install'
 
 
 # - bash: |
