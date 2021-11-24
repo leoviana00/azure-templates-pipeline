@@ -14,8 +14,8 @@ variables:
   buildContext: ${{ parameters.buildContext }}
   projectName: ${{ parameters.projectName }}
   imageName: ${{ parameters.projectName }}
-  imageTag: $(build.sourceBranchName)
-  helmChartVersion: $(build.sourceBranchName)
+  imageTag: $(Build.BuildNumber)
+  helmChartVersion: $(Build.BuildNumber)
   helmfrom: $(Build.SourcesDirectory)
   helmto: $(Build.ArtifactStagingDirectory)
   chartHelmFile: ${{ parameters.chartHelmFile }}
