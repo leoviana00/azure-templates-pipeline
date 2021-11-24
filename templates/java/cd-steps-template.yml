@@ -46,19 +46,19 @@ steps:
 #   displayName: 'deploy helm chart'
 
 # Implantar o gráfico para AKS
-# - task: HelmDeploy@0
-#   displayName: deploy chart to aks
-#   inputs:
-    # connectionType: 'Azure Resource Manager'
-    # azureSubscription: '$(azure.service.connection)'
-    # azureResourceGroup: 'demos'
-    # kubernetesCluster: 'aksdemoutkarsh'
-    # namespace: 'helmdemo'
-    # command: 'upgrade'
-    # chartType: 'FilePath'
-    # chartPath: '$(build.stagingdirectory)'
-    # releaseName: 'helmdemo'
-    # arguments: '--create-namespace --install'
+- task: HelmDeploy@0
+  displayName: deploy chart to aks
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: '$(azure.service.connection)'
+    azureResourceGroup: $(rg)
+    kubernetesCluster: $(aks)
+    namespace: 'helmdemo'
+    command: 'upgrade'
+    chartType: 'FilePath'
+    chartPath: '$(build.stagingdirectory)'
+    releaseName: 'helmdemo'
+    arguments: '--create-namespace --install'
 
 
 # - bash: |
