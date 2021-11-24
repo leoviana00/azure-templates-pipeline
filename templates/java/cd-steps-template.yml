@@ -31,19 +31,19 @@ steps:
   displayName: get credentials
 
 # Deploy no aks
-- script: |
-    helm upgrade \
-      --namespace $(k8sNamespace) \
-      --create-namespace \
-      --install \
-      --wait \
-      --version $helmChartVersion \
-      --set image.repository=$(registryServerName)/$(projectName) \
-      --set ingress.enabled=false \
-      $(projectName) \
-      $(registryName)/$(projectName)
-  failOnStderr: true
-  displayName: 'deploy helm chart'
+# - script: |
+#     helm upgrade \
+#       --namespace $(k8sNamespace) \
+#       --create-namespace \
+#       --install \
+#       --wait \
+#       --version $helmChartVersion \
+#       --set image.repository=$(registryServerName)/$(projectName) \
+#       --set ingress.enabled=false \
+#       $(projectName) \
+#       $(registryName)/$(projectName)
+#   failOnStderr: true
+#   displayName: 'deploy helm chart'
 
 # Implantar o gráfico para AKS
 # - task: HelmDeploy@0
