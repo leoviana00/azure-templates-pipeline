@@ -28,7 +28,7 @@ steps:
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/Chart.yaml \
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/values.yaml \
       $(projectName) \
-      $(pipeline.workspace)/install/$(projectName)
+      $(pipeline.workspace)/install/parrot
   failOnStderr: true
   displayName: 'deploy helm chart'
 
