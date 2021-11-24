@@ -48,7 +48,6 @@ steps:
       --create-namespace \
       --install \
       --wait \
-      --name $(projectName)
       --version $helmChartVersion \
       --set image.repository=$(registryServerName)/$(projectName) \
       --set ingress.enabled=false \
