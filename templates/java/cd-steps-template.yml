@@ -58,6 +58,8 @@ steps:
     chartType: 'FilePath'
     chartPath: '$(build.stagingdirectory)'
     releaseName: 'helmdemo'
+    install: true
+    waitForExecution: false
     arguments: '--create-namespace --install'
 
 
