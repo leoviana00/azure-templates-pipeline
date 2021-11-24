@@ -22,7 +22,7 @@ steps:
 
 # Extrair o gráfico em uma pasta
 - script: |
-    helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(pipeline.workspace)/install
+    helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
   displayName: export the chart to folder
 
 # Login no AKS
