@@ -25,7 +25,7 @@ steps:
     az aks get-credentials -n $(aks) -g $(rg)
   displayName: login aks
 
-  - script: |
+- script: |
     az aks get-credentials -n $(aks) -g $(rg)
   displayName: get credentials
 
