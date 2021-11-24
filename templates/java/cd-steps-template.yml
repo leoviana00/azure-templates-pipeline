@@ -49,7 +49,7 @@ steps:
       --install \
       --wait \
       --version $helmChartVersion \
-      --set image.repository=$(registryServerName)/$(projectName) \
+      --set image.repository=$(registryServerName)/$(projectName):$helmChartVersion \
       --set ingress.enabled=false \
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/Chart.yaml \
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/values.yaml \
