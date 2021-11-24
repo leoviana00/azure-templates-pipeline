@@ -19,9 +19,12 @@
 
         - Autentique-se no Azure usando as credenciais principais de serviço
         - Defina o cluster AKS especificado como o contexto.
+        - Instala o cliente Helm
         - Autentique o ACR com as credenciais do ACR 
         - Extraia a versão do gráfico do Helm que precisa ser instalada
         - Puxa o gráfico do Helm e o instala (ou atualiza). Aqui, estamos substituindo o repositório de imagens do gráfico para nosso repositório ACR.
 
 ## Estrutura
+
+![](./img/estrutura-cicd.jpg)
 
