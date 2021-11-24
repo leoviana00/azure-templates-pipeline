@@ -51,13 +51,13 @@ steps:
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscription: 'aks-connection-cluster-prod'
-    azureResourceGroup: $(rg)
-    kubernetesCluster: $(aks)
-    namespace: 'helmdemo'
+    azureResourceGroup: '$(rg)'
+    kubernetesCluster: '$(aks)'
+    namespace: '$(k8sNamespace)'
     command: 'upgrade'
     chartType: 'FilePath'
     chartPath: '$(build.stagingdirectory)'
-    releaseName: '1.16.0'
+    releaseName: 'helmdemo'
     arguments: '--create-namespace --install'
 
 
