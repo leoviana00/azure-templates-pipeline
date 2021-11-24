@@ -22,12 +22,25 @@ steps:
 
 - script: |
     az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
-    az aks get-credentials -n $(aks) -g $(rg)
   displayName: login aks
 
 - script: |
     az aks get-credentials -n $(aks) -g $(rg)
   displayName: get credentials
+
+- script: |
+    helm upgrade \
+      --namespace $(k8sNamespace) \
+      --create-namespace \
+      --install \
+      --wait \
+      --version $helmChartVersion \
+      --set image.repository=$(registryServerName)/$(projectName) \
+      --set ingress.enabled=false \
+      $(projectName) \
+      $(registryName)/$(projectName)
+  failOnStderr: true
+  displayName: 'deploy helm chart'
 
 # Implantar o gráfico para AKS
 # - task: HelmDeploy@0
@@ -59,15 +72,15 @@ steps:
 #        helm chart pull $(registryServerName)/charts/$(projectName):$imageTag
 #        helm chart export $(registryServerName)/charts/$(projectName):$imageTag --destination $(pipeline.workspace)/install
 #        helm upgrade \
-#     helm upgrade \
-#         --namespace $(k8sNamespace) \
-#         --create-namespace \
-#         --install \
-#         --wait \
-#         --version $helmChartVersion \
-#         --set image.repository=$(registryServerName)/$(projectName) \
-#         --set ingress.enabled=false \
-#         $(projectName) \
-#         $(registryName)/$(projectName)
-#   failOnStderr: true
-#   displayName: 'deploy helm chart'
+#   helm upgrade \
+#       --namespace $(k8sNamespace) \
+#       --create-namespace \
+#       --install \
+#       --wait \
+#       --version $helmChartVersion \
+#       --set image.repository=$(registryServerName)/$(projectName) \
+#       --set ingress.enabled=false \
+#       $(projectName) \
+#       $(registryName)/$(projectName)
+# failOnStderr: true
+# displayName: 'deploy helm chart'
