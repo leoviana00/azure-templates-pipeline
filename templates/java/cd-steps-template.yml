@@ -16,12 +16,13 @@ steps:
 
 # Puxar a versão mais recente do gráfico do ACR para o agente
 - script: |
-    helm chart pull $(registryServerName)/charts/$(projectName):latest
+    helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/ci-pipeline/build-artifact/variables.json -r)
+    helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
   displayName: get helm chart on agent
 
 # Extrair o gráfico em uma pasta
 - script: |
-    helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(build.stagingdirectory)
+    helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(pipeline.workspace)/install
   displayName: export the chart to folder
 
 # Login no AKS
