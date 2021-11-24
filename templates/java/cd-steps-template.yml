@@ -20,14 +20,17 @@ steps:
     helm chart export $(registryServerName)/charts/$(projectName):latest --destination $(build.stagingdirectory)
   displayName: export the chart to folder
 
+# Login no AKS
 - script: |
     az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
   displayName: login aks
 
+# Get credentials aks
 - script: |
     az aks get-credentials -n $(aks) -g $(rg)
   displayName: get credentials
 
+# Deploy no aks
 - script: |
     helm upgrade \
       --namespace $(k8sNamespace) \
