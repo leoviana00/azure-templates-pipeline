@@ -57,7 +57,7 @@ steps:
     command: 'upgrade'
     chartType: 'FilePath'
     chartPath: '$(build.stagingdirectory)'
-    releaseName: 'latest'
+    releaseName: '$(projectName)'
     install: true
     waitForExecution: false
     arguments: '--create-namespace --install'
