@@ -43,19 +43,19 @@ steps:
     helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/ci-pipeline/build-artifact/variables.json -r)
     helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
     helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
-  #   helm upgrade \
-  #     --namespace $(k8sNamespace) \
-  #     --create-namespace \
-  #     --install \
-  #     --wait \
-  #     --version $helmChartVersion \
-  #     --set image.repository=$(registryServerName)/$(projectName) \
-  #     --set ingress.enabled=false \
-  #     -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/Chart.yaml \
-  #     -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/values.yaml \
-  #     $(projectName) \
-  #     $(pipeline.workspace)/install/$(projectName)
-  # failOnStderr: true
+    helm upgrade \
+      --namespace $(k8sNamespace) \
+      --create-namespace \
+      --install \
+      --wait \
+      --version $helmChartVersion \
+      --set image.repository=$(registryServerName)/$(projectName) \
+      --set ingress.enabled=false \
+      -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/Chart.yaml \
+      -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/values.yaml \
+      $(projectName) \
+      $(pipeline.workspace)/install/$(projectName)
+  failOnStderr: true
   displayName: 'deploy helm chart'
 
 # Implantar o gráfico para AKS
