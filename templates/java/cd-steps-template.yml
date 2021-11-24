@@ -36,7 +36,7 @@ steps:
 #   displayName: get credentials
 
 # Deploy no aks
-- script: |
+- bash: |
     az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
     az aks get-credentials -n $(aks) -g $(rg)
     echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
