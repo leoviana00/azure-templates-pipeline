@@ -57,7 +57,7 @@ steps:
     command: 'upgrade'
     chartType: 'FilePath'
     chartPath: '$(build.stagingdirectory)'
-    releaseName: 'helmdemo'
+    releaseName: '$(projectName)'
     arguments: '--create-namespace --install'
 
 
