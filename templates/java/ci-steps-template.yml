@@ -45,6 +45,7 @@ steps:
   displayName: "install helm"
   inputs:
     helmVersionToInstall: $(helmVersion)
+- template: templates/java/chart-vars.yaml@helmrepo
 - script: |
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
     helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(chartHelmFile) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName)
