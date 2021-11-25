@@ -1,16 +1,4 @@
 steps:
-# Execução do projeto Java e testes com Apache Maven.
-# - task: Maven@3
-#   inputs:
-#     mavenPomFile: 'pom.xml'
-#     mavenOptions: '-Xmx3072m'
-#     javaHomeOption: 'JDKVersion'
-#     jdkVersionOption: '1.8'
-#     jdkArchitectureOption: 'x64'
-#     publishJUnitResults: true
-#     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-#     goals: 'package'
-
 # Build com Maven
 - script: |
     cd $(projectName)
@@ -61,7 +49,9 @@ steps:
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
     helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(chartHelmFile) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName)
     helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
-    echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
+    echo $(jq -n --arg version "$(helmChartVersion)" \
+                 --arg name "$(projectName' \
+                 {helmChartVersion: $version, projectName: $projectName}') > $(build.artifactStagingDirectory)/variables.json
   failOnStderr: true
   displayName: "helm package"
 

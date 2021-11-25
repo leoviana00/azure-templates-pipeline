@@ -1,5 +1,17 @@
 steps:
-# # Cria e envia a imagem do docker
+# Execução do projeto Java e testes com Apache Maven.
+# - task: Maven@3
+#   inputs:
+#     mavenPomFile: 'pom.xml'
+#     mavenOptions: '-Xmx3072m'
+#     javaHomeOption: 'JDKVersion'
+#     jdkVersionOption: '1.8'
+#     jdkArchitectureOption: 'x64'
+#     publishJUnitResults: true
+#     testResultsFiles: '**/surefire-reports/TEST-*.xml'
+#     goals: 'package']
+
+# Cria e envia a imagem do docker
 # - task: Docker@2
 #   displayName: Build and push an image to container registry
 #   inputs:
