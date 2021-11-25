@@ -24,7 +24,7 @@ steps:
       --wait \
       --version $helmChartVersion \
       --set image.repository=$(registryServerName)/$(projectName) \
-      --set ingress.enabled=false \
+      --set ingress.enabled=true \
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/Chart.yaml \
       -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/values.yaml \
       $(projectName) \
