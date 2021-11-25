@@ -49,7 +49,7 @@ steps:
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
     helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(chartHelmFile) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName)
     helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
-    echo $(jq -n --arg version "$(helmChartVersion)" --arg name "$(projectName)" '{helmChartVersion: $version, projectName: $projectName}') > $(build.artifactStagingDirectory)/variables.json
+    echo $(jq -n --arg version "$(helmChartVersion)" --arg name "$(projectName)" '{helmChartVersion: $version, projectName: $name}') > $(build.artifactStagingDirectory)/variables.json
   failOnStderr: true
   displayName: "helm package"
 
