@@ -25,7 +25,6 @@ steps:
       --version $helmChartVersion \
       --set image.repository=$(registryServerName)/$(projectName) \
       --set ingress.enabled=false \
-      -f $(pipeline.workspace)/ci-pipeline/build-artifact/azure-template-helm-chart/templates/java/$(projectName)/values.yaml \
       $(projectName) \
       $(pipeline.workspace)/install/$(projectName)
   failOnStderr: false
