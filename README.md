@@ -2,6 +2,11 @@
 
 - Repositório utilizado para armazenar templates pipeline ci-cd azure devops
 
+## Estrutura
+
+![](./img/estrutura-cicd.jpg)
+
+
 ## Pipeline CI
 
 - Etapas do pipeline `ci-steps-template.yml`
@@ -24,7 +29,4 @@
         - Extraia a versão do gráfico do Helm que precisa ser instalada
         - Puxa o gráfico do Helm e o instala (ou atualiza). Aqui, estamos substituindo o repositório de imagens do gráfico para nosso repositório ACR.
 
-## Estrutura
-
-![](./img/estrutura-cicd.jpg)
 
