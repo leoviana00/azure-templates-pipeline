@@ -89,5 +89,5 @@ az ad sp create-for-rbac -n aks-name-deploy --scopes aks-resource-id --role "Azu
 
 - Anexe ACR com AKS
 ```bash
-az aks update -g $rg -n $aks --attach-acr acr-resource-id
+az aks update -g $rg -n $aks --attach-acr acr-resource-id ou registryName
 ```
