@@ -41,6 +41,7 @@
 
 ## 📝 Requisitos
 
+- Criar um grupo de variáveis para as credenciais do `ACR`
 
 | ACR | Ter um acr configurado |
 | --- |---------- |
@@ -49,6 +50,7 @@
 | `registryLogin` |  ACR login     |
 | `registryPassword` |  ACR password     |
 
+- Criar um grupo de variáveis para as credenciais do `AKS`
 
 | AKS | Ter um aks configurado |
 | --- |---------- |
@@ -59,12 +61,14 @@
 | `aksSpId` |  Service principal Id     |
 | `aksSpSecret` |  Service principal password     | 
 
+- Criar um serviço de conexão para o `ACR`
+
 | Service Connection | Criar um service connection para o ACR |
 | --- |---------- |
 | Name  | Service Connection |
 | acr-connection-aks | Azure Container Registry |
 
-## Comandos úteis
+## 📄 Comandos úteis
 
 - Criar um novo principal de serviço `aks-name-deploy`
 
