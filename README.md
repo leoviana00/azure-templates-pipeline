@@ -43,8 +43,8 @@
 
 
 | ACR | Ter um acr configurado |
-| aks-varibles-group | Credenciais definidas em um grupo de variáveis |
 | --- |---------- |
+| acr-varibles-group | Credenciais definidas em um grupo de variáveis |
 | `registryName` |  Seu ACR name     |
 | `registryLogin` |  ACR login     |
 | `registryPassword` |  ACR password     |
