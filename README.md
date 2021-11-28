@@ -59,6 +59,11 @@
 | `aksSpId` |  Service principal Id     |
 | `aksSpSecret` |  Service principal password     | 
 
+| Service Connection | Criar um service connection para o ACR |
+| --- |---------- |
+| Name  | Service Connection |
+| acr-connection-aks | Azure Container Registry |
+
 ## Comandos úteis
 
 - Criar um novo principal de serviço `aks-name-deploy`
