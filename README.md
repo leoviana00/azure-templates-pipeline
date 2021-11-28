@@ -10,7 +10,7 @@
 
 ## 🛠️ Objetivo
 
-- Repositório utilizado para armazenar templates pipeline ci-cd azure devops
+- Repositório utilizado para armazenar templates de pipelines.
 
 ## ✨ Arquitetura
 
