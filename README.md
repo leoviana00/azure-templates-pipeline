@@ -57,7 +57,28 @@
 | `rg` |  AKS resource group     |
 | `aksSpTenantId` |  Subscription tenant id     |
 | `aksSpId` |  Service principal Id     |
-| `aksSpSecret` |  Service principal password     |
+| `aksSpSecret` |  Service principal password     | 
 
+## Comandos úteis
 
+- Criar um novo principal de serviço `aks-name-deploy`
 
+```bash
+az ad sp create-for-rbac -n aks-name-deploy --scopes aks-resource-id --role "Azure Kubernetes Service Cluster User Role" --query password -o tsv
+```
+
+- O comando acima irá gerar uma saída mais ou menos assim:
+```
+{
+  "appId": "00000000-0000-0000-0000-0000000000000",
+  "displayName": "aks-name-deploy",
+  "name": "0000000-0000-0000-0000-0000000000",
+  "password": "00000000000000-00000000000000000",
+  "tenant": "00000000-0000-0000-0000-00000000000"
+}
+```
+
+- Anexe ACR com AKS
+```bash
+az aks update -g $rg -n $aks --attach-acr acr-resource-id
+```
