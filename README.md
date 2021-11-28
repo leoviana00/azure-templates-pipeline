@@ -39,7 +39,25 @@
         - Extraia a versão do gráfico do Helm que precisa ser instalada
         - Puxa o gráfico do Helm e o instala (ou atualiza). Aqui, estamos substituindo o repositório de imagens do gráfico para nosso repositório ACR.
 
-## Requisitos
+## 📝 Requisitos
+
+
+| ACR | Ter um acr configurado |
+| aks-varibles-group | Credenciais definidas em um grupo de variáveis |
+| --- |---------- |
+| `registryName` |  Seu ACR name     |
+| `registryLogin` |  ACR login     |
+| `registryPassword` |  ACR password     |
+
+
+| AKS | Ter um aks configurado |
+| --- |---------- |
+| aks-varibles-group | Credenciais definidas em um grupo de variáveis |
+| `aks` |  AKS name     |
+| `rg` |  AKS resource group     |
+| `aksSpTenantId` |  Subscription tenant id     |
+| `aksSpId` |  Service principal Id     |
+| `aksSpSecret` |  Service principal password     |
 
 
 
