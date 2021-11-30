@@ -1,0 +1,21 @@
+parameters:
+  projectName: ""
+  dockerRegistryServiceConnectionName: ""
+  dockerfile: ""
+  buildContext: ""
+  chartHelmFile: ""
+
+variables:
+  helmVersion: 3.2.3
+  HELM_EXPERIMENTAL_OCI: 1
+  registryServerName: "$(registryName).azurecr.io"
+  dockerRegistryServiceConnectionName: ${{ parameters.dockerRegistryServiceConnectionName }}
+  dockerfile: ${{ parameters.dockerfile }}
+  buildContext: ${{ parameters.buildContext }}
+  projectName: ${{ parameters.projectName }}
+  imageName: ${{ parameters.projectName }}
+  imageTag: v$(build.buildId)
+  helmChartVersion: v$(build.buildId)
+  helmfrom: $(Build.SourcesDirectory)
+  helmto: $(Build.ArtifactStagingDirectory)
+  chartHelmFile: ${{ parameters.chartHelmFile }}
