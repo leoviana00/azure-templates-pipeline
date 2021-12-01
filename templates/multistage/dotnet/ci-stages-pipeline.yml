@@ -132,7 +132,7 @@ stages:
 
 - stage: Prod
   displayName: deploy to prod
-  dependsOn: ['Build','Dev']
+  dependsOn: ['Staging','Dev']
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: prod
