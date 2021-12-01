@@ -94,7 +94,7 @@ stages:
 - stage: Staging
   displayName: deploy to staging
   dependsOn: ['Build']
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
+  # condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
   - deployment: staging
     variables:
@@ -132,8 +132,8 @@ stages:
 
 - stage: Prod
   displayName: deploy to prod
-  dependsOn: ['Build','Staging']
-  # condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
+  dependsOn: ['Staging']
+  # condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
   - deployment: prod
     variables:
