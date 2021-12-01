@@ -5,12 +5,6 @@ steps:
   inputs:
     helmVersionToInstall: $(helmVersion)
 
-# Download artifact
-# - task: DownloadPipelineArtifact@2
-#   inputs:
-#     path: ci-pipeline 
-#     artifact: build-artifact
-
 # Deploy no aks
 - bash: |
     az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
