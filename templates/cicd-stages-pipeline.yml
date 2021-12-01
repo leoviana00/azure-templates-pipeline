@@ -1,0 +1,36 @@
+stages:
+- stage: Docker
+  jobs:
+  - job: docker_login
+    steps:
+    inputs:
+      command: login
+      containerRegistry: $(dockerRegistryServiceConnectionName)
+  - job: docker_build
+    steps:
+    inputs:
+      repository: $(imageName)
+      command: build
+      Dockerfile: $(dockerfile)
+      tags: |
+        $(imageTag)
+  - job: docker_push
+    steps:
+    inputs:
+      command: push
+      containerRegistry: $(dockerRegistryServiceConnectionName)
+      repository: $(imageName)
+      tags: |
+        $(imageTag)    
+
+- stage: Helm
+  jobs:
+  - job: helm_installer
+    steps:
+      inputs:
+      command: push
+      containerRegistry: $(dockerRegistryServiceConnectionName)
+      repository: $(imageName)
+      tags: |
+        $(imageTag)
+
