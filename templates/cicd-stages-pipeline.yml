@@ -1,4 +1,3 @@
-stages:
 - stage: Docker
   jobs:
   - job: docker_login
