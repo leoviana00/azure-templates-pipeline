@@ -97,7 +97,7 @@ stages:
     variables:
     - group: aks-variable-group
     displayName: deploy to aks hom
-    environment: hom-$(projectName)
+    environment: development-$(projectName)
     strategy:
       runOnce:
         deploy:
@@ -135,7 +135,7 @@ stages:
     variables:
     - group: aks-variable-group
     displayName: deploy to aks prod
-    environment: production-$(projectName)
+    environment: development-$(projectName)
     strategy:
       runOnce:
         deploy:
