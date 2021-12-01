@@ -1,14 +1,16 @@
 - stage: Build
+  displayName: 'Build'
   jobs:
-  - job: Build
+  - job: 'Build'
     pool:
       vmImage: ubuntu-latest 
     steps:
     - script: echo Fake build code
 
 - stage: Deploy
+  displayName: 'Deploy'
   jobs:
-  - job: Deploy
+  - job: 'Deploy'
     pool:
       vmImage: ubuntu-latest 
     steps:
