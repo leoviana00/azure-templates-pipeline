@@ -100,7 +100,7 @@ stages:
     variables:
     - group: aks-variable-group
     displayName: deploy to aks staging
-    environment: staging-$(projectName)
+    environment: hom-$(projectName)
     strategy:
       runOnce:
         deploy:
