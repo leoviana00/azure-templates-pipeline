@@ -8,6 +8,7 @@ steps:
 # Download artifact
 - task: DownloadPipelineArtifact@2
   inputs:
+    path: '$(Pipeline.Workspace)/ci-pipeline' 
     artifact: build-artifact
 
 # Deploy no aks
