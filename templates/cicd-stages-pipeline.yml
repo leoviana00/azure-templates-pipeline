@@ -1,11 +1,13 @@
 - stage: Build
+  displayName: Build
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
   - job: Build
     steps:
-      - script: echo Fake build code
+    - script: echo Fake build code
 
 - stage: Deploy
   jobs:
   - job: Deploy
     steps:
-      - script: echo Fake deploy code
+    - script: echo Fake deploy code
