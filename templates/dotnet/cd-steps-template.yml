@@ -6,10 +6,10 @@ steps:
     helmVersionToInstall: $(helmVersion)
 
 # Download artifact
-- task: DownloadPipelineArtifact@2
-  inputs:
-    path: ci-pipeline 
-    artifact: build-artifact
+# - task: DownloadPipelineArtifact@2
+#   inputs:
+#     path: ci-pipeline 
+#     artifact: build-artifact
 
 # Deploy no aks
 - bash: |
