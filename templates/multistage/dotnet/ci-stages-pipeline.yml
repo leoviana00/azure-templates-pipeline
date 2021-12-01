@@ -134,7 +134,6 @@ stages:
   dependsOn:
     - Dev
     - Hom
-  condition: or(succeeded('Dev'), succeeded('Hom'))
   jobs:
   - deployment: prod
     variables:
