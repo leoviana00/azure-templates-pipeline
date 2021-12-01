@@ -1,35 +1,48 @@
-- stage: Docker
-  jobs:
-  - job: docker_login
-    steps:
-    inputs:
-      command: login
-      containerRegistry: $(dockerRegistryServiceConnectionName)
-  - job: docker_build
-    steps:
-    inputs:
-      repository: $(imageName)
-      command: build
-      Dockerfile: $(dockerfile)
-      tags: |
-        $(imageTag)
-  - job: docker_push
-    steps:
-    inputs:
-      command: push
-      containerRegistry: $(dockerRegistryServiceConnectionName)
-      repository: $(imageName)
-      tags: |
-        $(imageTag)    
+steps:
+# Docker login
+- task: Docker@2
+  displayName: dockerLogin
+  inputs:
+    command: login
+    containerRegistry: $(dockerRegistryServiceConnectionName)
 
-- stage: Helm
-  jobs:
-  - job: helm_installer
-    steps:
-      inputs:
-      command: push
-      containerRegistry: $(dockerRegistryServiceConnectionName)
-      repository: $(imageName)
-      tags: |
-        $(imageTag)
+# Docker Build
+- task: Docker@2
+  displayName: dockerBuild
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: $(dockerfile)
+    tags: |
+      $(imageTag)
 
+# Docker Push
+- task: Docker@2
+  displayName: dockerPush
+  inputs:
+    command: push
+    containerRegistry: $(dockerRegistryServiceConnectionName)
+    repository: $(imageName)
+    tags: |
+      $(imageTag)
+   
+# Instala o cliente Helm
+- task: HelmInstaller@1
+  displayName: "install helm"
+  inputs:
+    helmVersionToInstall: $(helmVersion)
+- script: |
+    echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
+    helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(chartHelmFile) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName)
+    helm chart push $(registryName).azurecr.io/charts/$(projectName):$(helmChartVersion)
+    echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
+  failOnStderr: true
+  displayName: "helm package"
+
+# Copie alguns arquivos adicionais para o artefato. Que podemos usar para substituir os valores do gráfico do Helm.
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(helmfrom)
+    targetFolder: $(helmto)
+- publish: $(build.artifactStagingDirectory)
+  artifact: build-artifact
