@@ -51,7 +51,7 @@ stages:
     - publish: $(build.artifactStagingDirectory)
       artifact: build-artifact
 
-- stage: Deploy
+- stage: DeployDev
   displayName: deploy to dev
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/dev'))
   jobs:
@@ -89,7 +89,7 @@ stages:
               # failOnStderr: true
               displayName: 'deploy helm chart'
 
-- stage: Deploy
+- stage: DeployHom
   displayName: deploy to staging
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
@@ -127,7 +127,7 @@ stages:
               # failOnStderr: true
               displayName: 'deploy helm chart'
 
-- stage: Deploy
+- stage: DeployProd
   displayName: deploy to prod
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
