@@ -41,12 +41,20 @@ stages:
   displayName: 'Deploy AKS'
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
+  - job:
+    steps:
+    - task: HelmInstaller@1
+      displayName: 'install helm'
+      inputs:
+        helmVersionToInstall: $(helmVersion)
+    - download: ci-pipeline
+      artifact: build-artifact
+
   - deployment: dev
     displayName: 'Deploy job'
     environment: development-$(projectName)
     variables:
     - group: aks-variable-group
-    steps:
     - bash: |
         az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
         az aks get-credentials -n $(aks) -g $(rg)
