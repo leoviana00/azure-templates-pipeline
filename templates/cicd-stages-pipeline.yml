@@ -1,5 +1,11 @@
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+      - script: echo Fake build code
+
 - stage: Deploy
   jobs:
   - job: Deploy
     steps:
-      - script: echo Fake deploying code
+      - script: echo Fake deploy code
