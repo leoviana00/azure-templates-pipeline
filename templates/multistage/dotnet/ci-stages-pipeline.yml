@@ -129,7 +129,7 @@ stages:
 
 - stage: DeployProd
   displayName: deploy to prod
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
   jobs:
   - deployment: dev
     variables:
