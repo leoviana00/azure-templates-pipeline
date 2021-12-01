@@ -91,43 +91,44 @@ stages:
               # failOnStderr: true
               displayName: 'deploy helm chart'
 
-# - stage: Hom
-#   displayName: deploy to staging
-#   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
-#   jobs:
-#   - deployment: hom
-#     variables:
-#     - group: aks-variable-group
-#     displayName: deploy to aks hom
-#     environment: development-$(projectName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:               
-#             - task: HelmInstaller@1
-#               displayName: 'install helm'
-#               inputs:
-#                 helmVersionToInstall: $(helmVersion)
+- stage: Staging
+  displayName: deploy to staging
+  dependsOn: ['Build']
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
+  jobs:
+  - deployment: staging
+    variables:
+    - group: aks-variable-group
+    displayName: deploy to aks staging
+    environment: staging-$(projectName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:               
+            - task: HelmInstaller@1
+              displayName: 'install helm'
+              inputs:
+                helmVersionToInstall: $(helmVersion)
 
-#             - bash: |
-#                 az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
-#                 az aks get-credentials -n $(aks) -g $(rg)
-#                 echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
-#                 helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/build-artifact/variables.json -r)
-#                 helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
-#                 helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
-#                 helm upgrade \
-#                   --namespace $(k8sNamespace) \
-#                   --create-namespace \
-#                   --install \
-#                   --wait \
-#                   --version $helmChartVersion \
-#                   --set image.repository=$(registryServerName)/$(projectName) \
-#                   --set ingress.enabled=false \
-#                   $(projectName) \
-#                   $(pipeline.workspace)/install/$(projectName)
-#               # failOnStderr: true
-#               displayName: 'deploy helm chart'
+            - bash: |
+                az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
+                az aks get-credentials -n $(aks) -g $(rg)
+                echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
+                helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/build-artifact/variables.json -r)
+                helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
+                helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
+                helm upgrade \
+                  --namespace $(k8sNamespace) \
+                  --create-namespace \
+                  --install \
+                  --wait \
+                  --version $helmChartVersion \
+                  --set image.repository=$(registryServerName)/$(projectName) \
+                  --set ingress.enabled=false \
+                  $(projectName) \
+                  $(pipeline.workspace)/install/$(projectName)
+              # failOnStderr: true
+              displayName: 'deploy helm chart'
 
 - stage: Prod
   displayName: deploy to prod
