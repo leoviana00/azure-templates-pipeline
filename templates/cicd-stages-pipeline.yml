@@ -6,11 +6,13 @@ stages:
     steps:
     - checkout: self
     - checkout: helmrepo
+
     - task: Docker@2
       displayName: dockerLogin
       inputs:
         command: login
         containerRegistry: $(dockerRegistryServiceConnectionName)
+
     - task: Docker@2
       displayName: dockerBuild
       inputs:
@@ -19,6 +21,16 @@ stages:
         Dockerfile: $(dockerfile)
         tags: |
           $(imageTag)
+
+    - task: Docker@2
+      displayName: dockerPush
+      inputs:
+        command: push
+        containerRegistry: $(dockerRegistryServiceConnectionName)
+        repository: $(imageName)
+        tags: |
+          $(imageTag)
+
     - task: HelmInstaller@1
       displayName: "install helm"
       inputs:
@@ -30,9 +42,11 @@ stages:
         echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
       failOnStderr: true
       displayName: "helm package"
+
     - task: CopyFiles@2
       inputs:
         sourceFolder: $(helmfrom)
         targetFolder: $(helmto)
+        
     - publish: $(build.artifactStagingDirectory)
       artifact: build-artifact
