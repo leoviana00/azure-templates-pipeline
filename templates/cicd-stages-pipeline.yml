@@ -4,6 +4,7 @@ stages:
   jobs:
   - job: 'Build'
     steps:
+    - checkout: self
     - checkout: helmrepo
     - task: Docker@2
       displayName: dockerLogin
