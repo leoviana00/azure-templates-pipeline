@@ -9,7 +9,7 @@ steps:
 #     jdkArchitectureOption: 'x64'
 #     publishJUnitResults: true
 #     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-#     goals: 'package']
+#     goals: 'package'
 
 # Cria e envia a imagem do docker
 # - task: Docker@2

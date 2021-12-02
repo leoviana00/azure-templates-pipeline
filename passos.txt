@@ -1,0 +1,60 @@
+## Helpful commands - Service principal credentials
+
+1. Crie um novo principal de serviço `aks-name-deploy`
+
+```
+az ad sp create-for-rbac -n aks-deploy --scopes aks-prod --role "Azure Kubernetes Service Cluster User Role" --query password -o tsv
+```
+az ad sp delete --id appId
+az ad sp list --display-name aks-deploy
+
+2. Onde aks-resource-id fica
+
+```
+az aks show -n aks-prod -g rg-br-infra-cluster-prod --query id -o tsv
+```
+
+- O comando acima irá gerar a senha principal do serviço aksSpSecret.
+
+3. Para obter o ID principal do serviço aksSpId
+
+```
+az ad sp show --id http://aks-name-deploy --query appId -o tsv
+```
+
+4. Também precisamos anexar ACR com AKS para que AKS possa puxar nossas imagens docker privadas de nosso ACR`
+
+```
+az aks update -g rg-br-infra-cluster-prod -n aks-prod --attach-acr inframateus
+``` 
+
+5. Onde acr-resource-ide stá a saída 
+
+```
+az acr show -n inframateus -g rg-br-infra-mateus-iac-prod --query id -o tsv
+```
+
+## Obter ID do locatário do Azure
+
+6. Para obter tenantId `aksSpTenantId`
+
+```
+- az account show --query tenantId -o tsv
+```
+
+
+## Vaiables
+
+aks: aks-prod
+rg: rg-br-infra-cluster-prod
+aksSpTenatId: 77f91f97-eeac-4ec0-bff5-a33822b0a029
+aksSpId: 1074c172-af11-4e1f-8171-2b3ac6a6179e
+aksSpSecret: PJJkYJH7z1BQ0U-b8lRDdDSyC5TPxEzo1-
+
+{
+  "appId": "1074c172-af11-4e1f-8171-2b3ac6a6179e",
+  "displayName": "aks-deploy",
+  "name": "1074c172-af11-4e1f-8171-2b3ac6a6179e",
+  "password": "PJJkYJH7z1BQ0U-b8lRDdDSyC5TPxEzo1-",
+  "tenant": "77f91f97-eeac-4ec0-bff5-a33822b0a029"
+}
