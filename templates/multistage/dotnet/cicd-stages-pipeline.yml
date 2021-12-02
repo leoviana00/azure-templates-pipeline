@@ -103,7 +103,7 @@ stages:
 - stage: Staging
   displayName: deploy to staging
   dependsOn: ['Build']
-  # condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/dev'))
   jobs:
   - deployment: staging
     variables:
