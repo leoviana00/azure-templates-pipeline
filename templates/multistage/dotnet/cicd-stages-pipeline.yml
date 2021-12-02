@@ -1,4 +1,7 @@
 stages:
+# ---------------------------------------------------------------------------
+#                           BUILD AND PUSH
+# ---------------------------------------------------------------------------
 - stage: Build 
   displayName: 'Build and Push'
   jobs:
@@ -51,7 +54,9 @@ stages:
     - publish: $(build.artifactStagingDirectory)
       artifact: build-artifact
 
-# Deployment API 
+# ---------------------------------------------------------------------------
+#                           Deployment DEV
+# ---------------------------------------------------------------------------
 - stage: Dev
   displayName: deploy to dev
   dependsOn: ['Build']
@@ -91,6 +96,10 @@ stages:
               # failOnStderr: true
               displayName: 'deploy helm chart'
 
+# ---------------------------------------------------------------------------
+#                           Deployment STAGING
+# ---------------------------------------------------------------------------
+
 - stage: Staging
   displayName: deploy to staging
   dependsOn: ['Build']
@@ -129,6 +138,10 @@ stages:
                   $(pipeline.workspace)/install/$(projectName)
               # failOnStderr: true
               displayName: 'deploy helm chart'
+
+# ---------------------------------------------------------------------------
+#                           Deployment PRODUCTION
+# ---------------------------------------------------------------------------
 
 - stage: Prod
   displayName: deploy to prod
