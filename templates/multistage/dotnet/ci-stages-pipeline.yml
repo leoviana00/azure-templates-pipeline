@@ -1,5 +1,4 @@
-stages:
-- stage: Build 
+- stage: 
   displayName: 'Build and Push'
   jobs:
   - job: 'Build'
