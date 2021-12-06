@@ -10,34 +10,24 @@ stages:
     - checkout: self
     - checkout: helmrepo
 
+    # Build and push with docker
     - task: Docker@2
-      displayName: dockerLogin
+      displayName: Build and push an image to container registry
       inputs:
-        command: login
-        containerRegistry: $(dockerRegistryServiceConnectionName)
-
-    - task: Docker@2
-      displayName: dockerBuild
-      inputs:
+        command: buildAndPush
         repository: $(imageName)
-        command: build
-        Dockerfile: $(dockerfile)
+        dockerfile: $(dockerfile)
+        containerRegistry: $(dockerRegistryServiceConnectionName)
         tags: |
           $(imageTag)
 
-    - task: Docker@2
-      displayName: dockerPush
-      inputs:
-        command: push
-        containerRegistry: $(dockerRegistryServiceConnectionName)
-        repository: $(imageName)
-        tags: |
-          $(imageTag)
-
+    # Helm installer
     - task: HelmInstaller@1
       displayName: "install helm"
       inputs:
         helmVersionToInstall: $(helmVersion)
+    
+    # Helm chart save and push
     - script: |
         echo $(registryPassword) | helm registry login $(registryName).azurecr.io --username $(registryLogin) --password-stdin
         helm chart save $(helm package --app-version $(imageTag) --version $(helmChartVersion) ./$(chartHelmFile) | grep -o '/.*.tgz') $(registryName).azurecr.io/charts/$(projectName)
@@ -46,55 +36,62 @@ stages:
       failOnStderr: true
       displayName: "helm package"
 
+    # Copy files
     - task: CopyFiles@2
       inputs:
         sourceFolder: $(helmfrom)
         targetFolder: $(helmto)
-        
+
+    # Publish artifact    
     - publish: $(build.artifactStagingDirectory)
       artifact: build-artifact
 
 # ---------------------------------------------------------------------------
 #                           Deployment DEV
 # ---------------------------------------------------------------------------
+
 - stage: Dev
   displayName: deploy to dev
+  # Dependência do build com sucesso para rodar
   dependsOn: ['Build']
+  # Condição para ser startado
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/dev'))
   jobs:
   - deployment: dev
-    variables:
-    - group: aks-variable-group
-    displayName: deploy to aks dev
-    environment: development-$(projectName)
+    displayName: Deploy to aks dev
+    environment: Deploy_Dev
     strategy:
       runOnce:
         deploy:
-          steps:               
+          steps:   
+            # Helm Installer
             - task: HelmInstaller@1
-              displayName: 'install helm'
+              displayName: 'Install helm'
               inputs:
                 helmVersionToInstall: $(helmVersion)
 
+            # Helm chart pull and export
             - bash: |
-                az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
-                az aks get-credentials -n $(aks) -g $(rg)
                 echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
                 helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/build-artifact/variables.json -r)
                 helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
                 helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
-                helm upgrade \
-                  --namespace $(k8sNamespace) \
-                  --create-namespace \
-                  --install \
-                  --wait \
-                  --version $helmChartVersion \
-                  --set image.repository=$(registryServerName)/$(projectName) \
-                  --set ingress.enabled=false \
-                  $(projectName) \
-                  $(pipeline.workspace)/install/$(projectName)
-              # failOnStderr: true
-              displayName: 'deploy helm chart'
+              displayName: 'Helm Pull and Export'
+
+            # Helm Deploy
+            - task: HelmDeploy@0
+              displayName: Deploy chart to aks
+              inputs:
+                connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
+                azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
+                kubernetesCluster: 'aks-prod' # Nome do aks
+                namespace: '$(k8sNamespace)' # Passando o namespace
+                command: 'upgrade' # Ação a ser tomada
+                chartType: 'FilePath' 
+                chartPath: '$(pipeline.workspace)/install/$(projectName)/' # LOcal para onde o chart foi exportado
+                releaseName: '$(projectName)' # Nome da release
+                arguments: '--create-namespace --install --set image.repository=$(registryServerName)/$(projectName)' # Passando alguns argumrntos
 
 # ---------------------------------------------------------------------------
 #                           Deployment STAGING
@@ -106,38 +103,40 @@ stages:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
   - deployment: staging
-    variables:
-    - group: aks-variable-group
     displayName: deploy to aks staging
-    environment: hom-$(projectName)
+    environment: Deploy_Hom
     strategy:
       runOnce:
         deploy:
-          steps:               
+          steps:   
+            # Helm Installer
             - task: HelmInstaller@1
-              displayName: 'install helm'
+              displayName: 'Install helm'
               inputs:
                 helmVersionToInstall: $(helmVersion)
 
+            # Helm chart pull and export
             - bash: |
-                az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
-                az aks get-credentials -n $(aks) -g $(rg)
                 echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
                 helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/build-artifact/variables.json -r)
                 helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
                 helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
-                helm upgrade \
-                  --namespace $(k8sNamespace) \
-                  --create-namespace \
-                  --install \
-                  --wait \
-                  --version $helmChartVersion \
-                  --set image.repository=$(registryServerName)/$(projectName) \
-                  --set ingress.enabled=false \
-                  $(projectName) \
-                  $(pipeline.workspace)/install/$(projectName)
-              # failOnStderr: true
-              displayName: 'deploy helm chart'
+              displayName: 'Helm Pull and Export'
+
+            # Helm Deploy
+            - task: HelmDeploy@0
+              displayName: Deploy chart to aks
+              inputs:
+                connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
+                azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
+                kubernetesCluster: 'aks-prod' # Nome do aks
+                namespace: '$(k8sNamespace)' # Passando o namespace
+                command: 'upgrade' # Ação a ser tomada
+                chartType: 'FilePath' 
+                chartPath: '$(pipeline.workspace)/install/$(projectName)/' # LOcal para onde o chart foi exportado
+                releaseName: '$(projectName)' # Nome da release
+                arguments: '--create-namespace --install --set image.repository=$(registryServerName)/$(projectName)' # Passando alguns argumrntos 
 
 # ---------------------------------------------------------------------------
 #                           Deployment PRODUCTION
@@ -146,38 +145,40 @@ stages:
 - stage: Prod
   displayName: deploy to prod
   dependsOn: ['Staging']
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
   - deployment: prod
-    variables:
-    - group: aks-variable-group
     displayName: deploy to aks prod
-    environment: production-$(projectName)
+    environment: Deploy_Prod
     strategy:
       runOnce:
         deploy:
-          steps:               
+          steps:   
+            # Helm Installer
             - task: HelmInstaller@1
-              displayName: 'install helm'
+              displayName: 'Install helm'
               inputs:
                 helmVersionToInstall: $(helmVersion)
 
+            # Helm chart pull and export
             - bash: |
-                az login --service-principal -u $(aksSpId) -p '$(aksSpSecret)' --tenant $(aksSpTenantId)
-                az aks get-credentials -n $(aks) -g $(rg)
                 echo "$(registryPassword)" | helm registry login $(registryServerName) --username $(registryLogin) --password-stdin
                 helmChartVersion=$(jq .helmChartVersion $(pipeline.workspace)/build-artifact/variables.json -r)
                 helm chart pull $(registryServerName)/charts/$(projectName):$helmChartVersion
                 helm chart export $(registryServerName)/charts/$(projectName):$helmChartVersion --destination $(pipeline.workspace)/install
-                helm upgrade \
-                  --namespace $(k8sNamespace) \
-                  --create-namespace \
-                  --install \
-                  --wait \
-                  --version $helmChartVersion \
-                  --set image.repository=$(registryServerName)/$(projectName) \
-                  --set ingress.enabled=false \
-                  $(projectName) \
-                  $(pipeline.workspace)/install/$(projectName)
-              # failOnStderr: true
-              displayName: 'deploy helm chart'
+              displayName: 'Helm Pull and Export'
+
+            # Helm Deploy
+            - task: HelmDeploy@0
+              displayName: Deploy chart to aks
+              inputs:
+                connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
+                azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
+                kubernetesCluster: 'aks-prod' # Nome do aks
+                namespace: '$(k8sNamespace)' # Passando o namespace
+                command: 'upgrade' # Ação a ser tomada
+                chartType: 'FilePath' 
+                chartPath: '$(pipeline.workspace)/install/$(projectName)/' # LOcal para onde o chart foi exportado
+                releaseName: '$(projectName)' # Nome da release
+                arguments: '--create-namespace --install --set image.repository=$(registryServerName)/$(projectName)' # Passando alguns argumrntos
