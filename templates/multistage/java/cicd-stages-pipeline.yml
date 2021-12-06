@@ -118,8 +118,6 @@ stages:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
   - deployment: staging
-    variables:
-    - group: aks-variable-group-dev
     displayName: deploy to aks staging
     environment: Deploy_Hom
     strategy:
@@ -165,8 +163,6 @@ stages:
   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/staging'))
   jobs:
   - deployment: prod
-    variables:
-    - group: aks-variable-group-dev
     displayName: deploy to aks prod
     environment: Deploy_Prod
     strategy:
