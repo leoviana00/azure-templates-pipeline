@@ -98,7 +98,7 @@ stages:
               displayName: Deploy chart to aks
               inputs:
                 connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
-                azureSubscription: 'aks-test-deploy' # Nome da conexão de serviço criada
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
                 azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
                 kubernetesCluster: 'aks-prod' # Nome do aks
                 namespace: '$(k8sNamespace)' # Passando o namespace
@@ -145,7 +145,7 @@ stages:
               displayName: Deploy chart to aks
               inputs:
                 connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
-                azureSubscription: 'aks-test-deploy' # Nome da conexão de serviço criada
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
                 azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
                 kubernetesCluster: 'aks-prod' # Nome do aks
                 namespace: '$(k8sNamespace)' # Passando o namespace
@@ -192,7 +192,7 @@ stages:
               displayName: Deploy chart to aks
               inputs:
                 connectionType: 'Azure Resource Manager' #Criar um serviço de conexão do tipo Resource Manager
-                azureSubscription: 'aks-test-deploy' # Nome da conexão de serviço criada
+                azureSubscription: 'aks-connection-cluster-prod' # Nome da conexão de serviço criada
                 azureResourceGroup: 'rg-br-infra-cluster-prod' # Nome do Resource Group
                 kubernetesCluster: 'aks-prod' # Nome do aks
                 namespace: '$(k8sNamespace)' # Passando o namespace
