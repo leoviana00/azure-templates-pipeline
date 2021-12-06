@@ -100,7 +100,7 @@ stages:
 - stage: Staging
   displayName: deploy to staging
   dependsOn: ['Build']
-  condition: and(succeeded(), eq(variables['build.sourceBranch'],'refs/heads/releases/*'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/releases/*'))
   jobs:
   - deployment: staging
     displayName: deploy to aks staging
