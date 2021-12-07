@@ -24,7 +24,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: test
-        projects: '**/*Tests/*.csproj'
+        projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
     
     - script: dotnet test --logger trx
