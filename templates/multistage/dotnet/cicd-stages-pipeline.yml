@@ -25,7 +25,7 @@ stages:
       inputs:
         command: restore
         projects: '**/*.csproj'
-      displayName: Restore
+      displayName: dotnet restore
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -57,10 +57,10 @@ stages:
       displayName: 'dotnet publishsh artifact'
 
 
-- stage: Build 
+- stage: BuildPush 
   displayName: 'Build and Push'
   jobs:
-  - job: 'Build'
+  - job: 'BuildPush'
     steps:
     - checkout: self
     - checkout: helmrepo
@@ -108,7 +108,7 @@ stages:
 - stage: Dev
   displayName: deploy to dev
   # Dependência do build com sucesso para rodar
-  dependsOn: ['Build']
+  dependsOn: ['BuildPush']
   # Condição para ser startado
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   jobs:
@@ -154,7 +154,7 @@ stages:
 
 - stage: Release
   displayName: deploy to staging
-  dependsOn: ['Build']
+  dependsOn: ['BuildPush']
   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/dev'))
   jobs:
   - deployment: staging
