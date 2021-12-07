@@ -49,11 +49,11 @@ stages:
         zipAfterPublish: True
       displayName: 'Publish $(projectName)'
 
-    # - task: PublishPipelineArtifact@1
-    #   inputs:
-    #     targetPath: '$(Build.ArtifactStagingDirectory)' 
-    #     artifactName: '$(projectName)-publish'
-    #     publishLocation: 'Container'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'Artifact-$(projectName)'
+      displayName: 'Publish Artifact-$(projectName)'
 
 # ---------------------------------------------------------------------------
 #                           BUILD AND PUSH
