@@ -13,49 +13,47 @@ stages:
       inputs:
         version: '5.0.x'
         includePreviewVersions: true # Required for preview versions
-      displayName: 'dotnet 5.0.x'
+      displayName: '.Net 5.0.x'
 
     - task: UseDotNet@2
       inputs:
         version: '3.0.x'
         packageType: runtime
-      displayName: 'dotnet 3.0.x'
-    
-    - script: dotnet --list-sdks
-      displayName: 'Listar versões do .NET disponíveis'
+      displayName: '.Net 3.0.x'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: restore
         projects: '**/*.csproj'
-      displayName: 'dotnet restore'
+      displayName: 'Restore Nuget Packages'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        arguments: '--configuration $(buildConfiguration)'
-      displayName: 'dotnet build'
+        projects: '**/*.csproj'
+        arguments: '--no-restore'
+      displayName: 'Build projects'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: test
         projects: '**/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
-      displayName: 'dotnet test'
+        arguments: '--no-restore --no-build'
+      displayName: 'Run Tests'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: publish
         publishWebProjects: True
-        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--configuration $(buildConfiguration) --no-restore'
         zipAfterPublish: True
-      displayName: 'dotnet publishS'
+      displayName: 'Publish $(projectName)'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: '$(projectName)-publish'
-        # publishLocation: 'Container'
+    # - task: PublishPipelineArtifact@1
+    #   inputs:
+    #     targetPath: '$(Build.ArtifactStagingDirectory)' 
+    #     artifactName: '$(projectName)-publish'
+    #     publishLocation: 'Container'
 
 # ---------------------------------------------------------------------------
 #                           BUILD AND PUSH
