@@ -13,7 +13,7 @@ stages:
       inputs:
         version: '5.0.x'
         includePreviewVersions: true # Required for preview versions
-        
+
     - task: UseDotNet@2
       inputs:
         version: '3.0.x'
@@ -48,7 +48,7 @@ stages:
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'build-artifact'
+        artifactName: 'build'
 
 
 - stage: Build 
