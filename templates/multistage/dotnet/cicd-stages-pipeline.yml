@@ -47,13 +47,13 @@ stages:
         publishWebProjects: True
         arguments: '--configuration $(buildConfiguration) --no-restore'
         zipAfterPublish: True
-      displayName: 'Publish $(projectName)'
+      displayName: 'Publish'
 
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'Artifact-$(projectName)'
-      displayName: 'Publish Artifact-$(projectName)'
+        artifactName: 'Artifact'
+      displayName: 'Publish Artifact'
 
 # ---------------------------------------------------------------------------
 #                           BUILD AND PUSH
