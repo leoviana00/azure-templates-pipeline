@@ -55,7 +55,7 @@ stages:
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)' 
         artifactName: '$(projectName)-publish'
-        publishLocation: 'Container'
+        # publishLocation: 'Container'
 
 # ---------------------------------------------------------------------------
 #                           BUILD AND PUSH
