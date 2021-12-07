@@ -11,14 +11,21 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'restore'
+        projects: '**/*.sln'
         feedsToUse: 'select'
-        vstsFeed: 'my-vsts-feed' # A series of numbers and letters
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        arguments: '--configuration $(buildConfiguration)'
+        projects: '**/*.sln'
       displayName: 'dotnet build $(buildConfiguration)'  
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Execute Unit tests'
+      inputs:
+        command: 'test'
+        projects: '**/*.csproj'
+        arguments: '--collect "Code Coverage"'
 
 
 - stage: Build 
