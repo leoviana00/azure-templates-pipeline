@@ -1,6 +1,6 @@
 stages:
 # ---------------------------------------------------------------------------
-#                           BUILD AND PUSH
+#                           BUILD, TESTE AND PUBLISH
 # ---------------------------------------------------------------------------
 
 - stage: BuildTest 
@@ -20,12 +20,15 @@ stages:
         version: '3.0.x'
         packageType: runtime
       displayName: 'dotnet 3.0.x'
+    
+    - script: dotnet --list-sdks
+      displayName: 'Listar versões do .NET disponíveis'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: restore
         projects: '**/*.csproj'
-      displayName: dotnet restore
+      displayName: 'dotnet restore'
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -48,14 +51,15 @@ stages:
         zipAfterPublish: True
       displayName: 'dotnet publishS'
 
-    # - task: PublishBuildArtifacts@1
-    #   displayName: 'publish artifacts' 
-    # - task: PublishPipelineArtifact@1
-    #   inputs:
-    #     targetPath: '$(Build.ArtifactStagingDirectory)' 
-    #     artifactName: 'build'
-    #   displayName: 'dotnet publishsh artifact'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: '$(projectName)-publish'
+        publishLocation: 'Container'
 
+# ---------------------------------------------------------------------------
+#                           BUILD AND PUSH
+# ---------------------------------------------------------------------------
 
 - stage: BuildPush 
   displayName: 'Build and Push'
