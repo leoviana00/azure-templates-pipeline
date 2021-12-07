@@ -6,6 +6,8 @@ stages:
 - stage: BuildTest 
   displayName: 'Build and Test'
   jobs:
+    variables:
+      buildConfiguration: 'Release'
   - job: 'BuildTest'
     steps:
     - task: DotNetCoreCLI@2
