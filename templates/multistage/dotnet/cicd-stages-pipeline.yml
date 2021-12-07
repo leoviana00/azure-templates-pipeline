@@ -24,22 +24,26 @@ stages:
       displayName: 'dotnet build $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet test $(buildConfiguration)'
+      displayName: 'dotnet test'
       inputs:
         command: test
         projects: '**/*.csproj'
-        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+        arguments: '--configuration $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet publish $(buildConfiguration)'
+      displayName: 'dotnet publishS'
       inputs:
         command: publish
         publishWebProjects: True
         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'publish artifacts' 
+    # - task: PublishBuildArtifacts@1
+    #   displayName: 'publish artifacts' 
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'build-artifact'
 
 
 - stage: Build 
