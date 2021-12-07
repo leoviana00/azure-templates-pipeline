@@ -13,35 +13,40 @@ stages:
       inputs:
         version: '5.0.x'
         includePreviewVersions: true # Required for preview versions
+      displayName: 'dotnet 5.0.x'
 
     - task: UseDotNet@2
       inputs:
         version: '3.0.x'
         packageType: runtime
+      displayName: 'dotnet 3.0.x'
 
-    - script: dotnet restore
-      displayName: 'dotnet restore'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+      displayName: Restore
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
         arguments: '--configuration $(buildConfiguration)'
-      displayName: 'dotnet build $(buildConfiguration)'
+      displayName: 'dotnet build'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet test'
       inputs:
         command: test
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
+      displayName: 'dotnet test'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet publishS'
       inputs:
         command: publish
         publishWebProjects: True
         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
+      displayName: 'dotnet publishS'
 
     # - task: PublishBuildArtifacts@1
     #   displayName: 'publish artifacts' 
@@ -49,6 +54,7 @@ stages:
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'build'
+      displayName: 'dotnet publishsh artifact'
 
 
 - stage: Build 
