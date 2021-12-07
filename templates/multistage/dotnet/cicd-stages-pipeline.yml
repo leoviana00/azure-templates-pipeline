@@ -50,11 +50,11 @@ stages:
 
     # - task: PublishBuildArtifacts@1
     #   displayName: 'publish artifacts' 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'build'
-      displayName: 'dotnet publishsh artifact'
+    # - task: PublishPipelineArtifact@1
+    #   inputs:
+    #     targetPath: '$(Build.ArtifactStagingDirectory)' 
+    #     artifactName: 'build'
+    #   displayName: 'dotnet publishsh artifact'
 
 
 - stage: BuildPush 
