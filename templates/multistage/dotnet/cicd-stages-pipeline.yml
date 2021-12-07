@@ -27,7 +27,7 @@ stages:
         projects: '**/*Tests/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
     
-    - script: dotnet test <test-project> --logger trx
+    - script: dotnet test --logger trx
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
