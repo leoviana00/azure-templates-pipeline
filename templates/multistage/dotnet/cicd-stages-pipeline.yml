@@ -13,6 +13,7 @@ stages:
         command: 'restore'
         feedsToUse: 'select'
         vstsFeed: 'my-vsts-feed' # A series of numbers and letters
+      displayName: 'dotnet restore $(buildConfiguration)' 
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -22,10 +23,19 @@ stages:
       displayName: 'dotnet build $(buildConfiguration)'  
 
     - task: DotNetCoreCLI@2
+      displayName: 'Install dotnetsay'
+      inputs:
+        command: custom
+        custom: tool
+        arguments: 'install -g dotnetsay'
+      displayName: 'install -g dotnetsay'
+
+    - task: DotNetCoreCLI@2
       inputs:
         command: test
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
+      displayName: 'dotnet test $(buildConfiguration)' 
     
     - script: dotnet test --logger trx
     - task: PublishTestResults@2
@@ -33,6 +43,7 @@ stages:
       inputs:
         testRunner: VSTest
         testResultsFiles: '**/*.trx'
+      displayName: 'dotnet publish $(buildConfiguration)' 
 
 
 - stage: Build 
